@@ -1,2 +1,4 @@
-# devtest
-We would like you to write a program to count unique domain addresses from an input file and output the count for each unique domain. Write this program as if it would be released into production and ensure that it is well tested. This is your chance to show off your skills. Please include documentation to explain the design decisions you made.
+#Rackspace Dev Test
+###Description
+This script allows the user to provide a file, multiple files, a directory, or multiple directories (or a combination of both) to determine the unique domains within. The script assumes that the list provided contain email addresses from which a domain can be extracted.  
+The script 
