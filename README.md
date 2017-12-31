@@ -9,7 +9,7 @@ The files provided are enqueued into a queue after determining that they are, in
 Once each thread has finished processing a file, a message is printed onto the screen to alert the user of success or failure.   
 ## Usage
 In order to run the script, please use the following syntax:  
-    \tpython2.7 DomainCounter.py FILE|DIRECTORY [FILE|DIRECTORY...]
+* python2.7 DomainCounter.py FILE|DIRECTORY [FILE|DIRECTORY...]
 ## Future Steps
 Next iterations of the program will focus on:
 * Using the argparse module to allow for more options for the script, such as changing the number of threads. Previous implementation of the module caused the program to crash in a not-so-graceful way. Further research and reading is required for optimum implementation.
