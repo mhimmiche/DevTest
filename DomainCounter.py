@@ -126,10 +126,11 @@ if __name__ == '__main__':
                     if isfile(file_in_dir) and access(file_in_dir, R_OK):
                         file_queue.put(realpath(file_in_dir))
             else:
-                print "File {0} is not a file. Could not run script.".format(arg)
+                print "Could not fine file {0} provided. Skipping over it.".format(arg)
     thread_lock.release()
     while not file_queue.empty():
         pass
     end_of_work = True
     for thread in thread_list:
         thread.join()
+    print "{0} has finished running. Thank you for using it.".format(sys.argv[0])
