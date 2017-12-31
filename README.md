@@ -1,14 +1,16 @@
 # Rackspace Dev Test
 ## Overview
-The purpose of this script is to allow a user to provide a file, directory, or multiple of these as a command line argument, the script would then find unique domains in each file provided and write out the results to a file. The output file include a list of every unique domain as well as the number of times the domain occurs in the document.  
-The script assumes that the correct format of a domain that the files provided include emails from which the domains can be extracted. The script also assumes that each domain name consist fo alphanumeric characters, cannot start or end with a hyphen (-), though it may include or or multiple in the middle. The script also assumes the Top Level Domain (TLD) consists of either a generic TLD, a country-specific TLD, or a ocmbination of both.
+The purpose of this script is to allow a user to provide a file, directory, or both as a command line argument. The script would then find unique domains in each file provided and write out the results to an output file. The output file includes a list of every unique domain as well as the number of times the domain occurs in the document.   
+The script assumes that the provided file includes  emails from which the domains can be extracted. The script also assumes that each domain name consist of alphanumeric characters, does not start or end with a hyphen (-), and does not include any other special character. The script also assumes that the Top Level Domain (TLD) consists of either a generic TLD (.com, .net...), a country-specific TLD (.uk, .ma,...), or a combination of both (.co.uk... etc).  
 ## Design
-The program makes use of threads to allow for multiple files to be processed simultaneously, ensuring optimum time and memory usage. The script is currently limited to only sixteen (16) threads as trial and error has shown no benefit to adding more threads.  
-The files provided are enqueued into file_queue after determining that they are, indeed, files, as well as that they are readable. Each thread will then apply a lock to the queue and dequeue the files. The lock allows each thread to access the resource without risk of a race-condition to occur. By having the threads continuously running, the risk of deadlock is mitigated as each thread will eventually gain access the to the resource.   
+To find unique domains, the program utilizes a regular expression pattern to find every match within the document.  
+The program makes use of threads to allow for multiple files to be processed simultaneously, ensuring optimum time and memory usage. The script is currently limited to only sixteen (16) threads, as trial and error has shown no benefit to adding more threads.  
+The files provided are enqueued into a queue after determining that they are, indeed, files, as well as that they are readable. Each thread will then apply a lock to the queue and dequeue a file yo operate on. The lock allows each thread to access the resource without risk of a race-condition to occur. By having the threads continuously running, the risk of deadlock is mitigated as each thread will eventually gain access the to the resource.   
 Once each thread has finished processing a file, a message is printed onto the screen to alert the user of success or failure.   
 ## Usage
 In order to run the script, please use the following syntax:  
-    python2.7 DomainCounter.py FILE|DIRECTORY [FILE|DIRECTORY...]
+    \tpython2.7 DomainCounter.py FILE|DIRECTORY [FILE|DIRECTORY...]
 ## Future Steps
-The next step in the program would be to use the argparse module to allow for more options to the script such as changing the number of threads. Previous implementation of the module caused the program to crash in a not-so-graceful way.  
-A recursive search of directory is also in the work, though a limit must be applied (providing '/' as an argument shouldn't cause the system to crash... As I've learned the hard way).
+Next iterations of the program will focus on:
+* Using the argparse module to allow for more options for the script, such as changing the number of threads. Previous implementation of the module caused the program to crash in a not-so-graceful way. Further research and reading is required for optimum implementation.
+* A recursive search of a provided directory is also in the works, though a limit must be applied to limit the depth of the search (providing '/' as an argument shouldn't cause the system to crash... As I've learned the hard way).
