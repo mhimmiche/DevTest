@@ -7,7 +7,7 @@ TODO: Allow recursive file lookup without bloating system (would have to apply a
 """
 import re
 import sys
-from os.path import isfile, isdir
+from os.path import isfile, isdir, realpath
 from os import access, R_OK, listdir
 import threading
 import Queue
@@ -95,20 +95,20 @@ def start_threads(t_list, t_count, queue, pattern):
     current_thread = 0  # Keeps track of thread ID created (counting starts at 0 or /r/programmerhumor will have a fit)
     while current_thread < t_count:
         curr_thread = FunctionThread(current_thread, queue, pattern)
-        curr_thread.start()
+        curr_thread.start() # Starting the theads helps mitigate deadlock as threads will eventually get access to resource as it becomes available.
         t_list.append(curr_thread)
         current_thread += 1
 
 
 if __name__ == '__main__':
-    # Flag created to allow for thread termination. 
+    # Flag created to allow for thread termination.
     # Ensures that every thread can be joined when all work is done.
     # https://www.tutorialspoint.com/python/python_multithreading.htm
     end_of_work = False
     max_threads = 16  # Max number of threads to be created, value can be changed depending on needs
     thread_list = []
     domain_pattern = re.compile('@[^\W](\w|-)*[^\W](\.\w*){1,2}')
-    thread_lock = threading.Lock()  # Creates a lock to ensure that no deadlocks occur between threads
+    thread_lock = threading.Lock()  # Creates a lock to ensure that no race condition occurs between threads
     file_queue = Queue.Queue()
     start_threads(thread_list, max_threads, file_queue, domain_pattern)
     thread_lock.acquire()
@@ -120,11 +120,11 @@ if __name__ == '__main__':
     else:
         for arg in sys.argv[1:]:
             if isfile(arg) and access(arg, R_OK):
-                file_queue.put(arg)
+                file_queue.put(realpath(arg))
             elif isdir(arg):
                 for file_in_dir in listdir(arg):
                     if isfile(file_in_dir) and access(file_in_dir, R_OK):
-                        file_queue.put(arg + "\\" + file_in_dir)
+                        file_queue.put(realpath(file_in_dir))
             else:
                 print "File {0} is not a file. Could not run script.".format(arg)
     thread_lock.release()
